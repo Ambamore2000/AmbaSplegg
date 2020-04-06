@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="AmbaSplegg:jar">
+    <output-path>$USER_HOME$/Documents/Servers/AmbaGames/plugins</output-path>
+    <root id="archive" name="AmbaSplegg.jar">
+      <element id="module-output" name="AmbaSplegg" />
+    </root>
+  </artifact>
+</component>

@@ -5,7 +5,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class AmbaSplegg extends JavaPlugin {
 
-    GameManager gameManager;
+    private GameManager gameManager;
 
     @Override
     public void onEnable() {
@@ -15,7 +15,7 @@ public class AmbaSplegg extends JavaPlugin {
     }
 
     private void registerClasses() {
-        gameManager = new GameManager(this, 2, 60*10);
+        gameManager = new GameManager(this, 1, 60*10);
     }
 
 

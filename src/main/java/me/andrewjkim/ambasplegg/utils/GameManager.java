@@ -44,7 +44,7 @@ public class GameManager {
         gameStatus = GameStatus.LOBBY_PENDING;
         secondsPassed = 0;
 
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyPendingRunnable(this), 20L, 20*20L);
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyPendingRunnable(this), 0, 20);
     }
 
     public void setLobbyStarting() {
@@ -52,7 +52,7 @@ public class GameManager {
         gameStatus = GameStatus.LOBBY_STARTING;
         secondsPassed = 0;
 
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyStartingRunnable(this), 20L, 15*20L);
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyStartingRunnable(this), 0, 20);
     }
 
     public void setGameStarting() {
@@ -60,7 +60,7 @@ public class GameManager {
         gameStatus = GameStatus.GAME_STARTING;
         secondsPassed = 0;
 
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 20L, 10*20L);
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 0, 20);
     }
 
     public void setInGame() {
@@ -68,7 +68,7 @@ public class GameManager {
         gameStatus = GameStatus.IN_GAME;
         secondsPassed = 0;
 
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new InGameRunnable(this), 20L, gameDuration*20L);
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new InGameRunnable(this), 0, 20);
     }
 
 
