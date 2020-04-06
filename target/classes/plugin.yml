@@ -1,8 +1,0 @@
-name: AmbaSplegg
-main: me.andrewjkim.ambasplegg.AmbaSplegg
-version: 1.0-SNAPSHOT
-description: A Splegg minigame utilizing AmbaGamesAPI.
-api-version: "1.15"
-authors: [AndrewJKim, personal@andrewjkim.me]
-website: andrewjkim.me/minecraft/ambagames/splegg
-
