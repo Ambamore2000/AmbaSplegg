@@ -14,10 +14,10 @@ public class GameStartingRunnable implements Runnable {
     @Override
     public void run() {
         int timer = 11 - gameManager.getSecondsPassed();
-        //TODO cool countdown 5 4 3 2 1 go!
         if (timer == 0) {
             gameManager.setInGame();
         } else {
+            //TODO cool countdown 5 4 3 2 1 go!
             Bukkit.broadcastMessage(String.valueOf(timer));
         }
         gameManager.addSecondPassed();

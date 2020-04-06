@@ -30,46 +30,55 @@ public class GameManager {
         setLobbyPending();
     }
 
-
-    public GameStatus getGameStatus() { return gameStatus; }
     public int getMinRequired() { return minRequired; }
     public int getSecondsPassed() { return secondsPassed; }
+    public int getGameDuration() { return gameDuration; }
 
     public void addSecondPassed() { secondsPassed++; }
 
-    private void stopCurrentTask() { if (task != -1) Bukkit.getScheduler().cancelTask(task); }
+    private void resetTask(GameStatus inputGameStatus) { if (task != -1) Bukkit.getScheduler().cancelTask(task); secondsPassed = 0; gameStatus = inputGameStatus; }
 
+
+    /**
+     * Sets game status to lobby pending. (Waiting for enough players to join)
+     */
     public void setLobbyPending() {
-        stopCurrentTask();
-        gameStatus = GameStatus.LOBBY_PENDING;
-        secondsPassed = 0;
+        resetTask(GameStatus.LOBBY_PENDING);
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyPendingRunnable(this), 0, 20);
     }
 
+    /**
+     * Sets game status to lobby starting. (Enough players to start the game)
+     */
+
     public void setLobbyStarting() {
-        stopCurrentTask();
-        gameStatus = GameStatus.LOBBY_STARTING;
-        secondsPassed = 0;
+        resetTask(GameStatus.LOBBY_STARTING);
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyStartingRunnable(this), 0, 20);
     }
 
+    /**
+     * Sets game status to game starting. (Short countdown for game to start)
+     */
+
     public void setGameStarting() {
-        stopCurrentTask();
-        gameStatus = GameStatus.GAME_STARTING;
-        secondsPassed = 0;
+        resetTask(GameStatus.GAME_STARTING);
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 0, 20);
     }
 
+    /**
+     * Sets game status to in game. (Game has begun)
+     */
+
     public void setInGame() {
-        stopCurrentTask();
-        gameStatus = GameStatus.IN_GAME;
-        secondsPassed = 0;
+        resetTask(GameStatus.IN_GAME);
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new InGameRunnable(this), 0, 20);
     }
+
+    //TODO Should I make a setCompleteGame function...
 
 
 }
