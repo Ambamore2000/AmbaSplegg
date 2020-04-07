@@ -2,10 +2,10 @@ package me.andrewjkim.ambasplegg.utils;
 
 import me.andrewjkim.ambasplegg.AmbaSplegg;
 import me.andrewjkim.ambasplegg.enums.GameStatus;
-import me.andrewjkim.ambasplegg.runnable.GameStartingRunnable;
-import me.andrewjkim.ambasplegg.runnable.InGameRunnable;
-import me.andrewjkim.ambasplegg.runnable.LobbyPendingRunnable;
-import me.andrewjkim.ambasplegg.runnable.LobbyStartingRunnable;
+import me.andrewjkim.ambasplegg.tasks.GameStartingRunnable;
+import me.andrewjkim.ambasplegg.tasks.InGameRunnable;
+import me.andrewjkim.ambasplegg.tasks.LobbyPendingRunnable;
+import me.andrewjkim.ambasplegg.tasks.LobbyStartingRunnable;
 import org.bukkit.Bukkit;
 
 public class GameManager {
@@ -33,6 +33,7 @@ public class GameManager {
     public int getMinRequired() { return minRequired; }
     public int getSecondsPassed() { return secondsPassed; }
     public int getGameDuration() { return gameDuration; }
+    public GameStatus getGameStatus() { return gameStatus; }
 
     public void addSecondPassed() { secondsPassed++; }
 
@@ -65,7 +66,7 @@ public class GameManager {
     public void setGameStarting() {
         resetTask(GameStatus.GAME_STARTING);
 
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 0, 20);
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 100, 20);
     }
 
     /**

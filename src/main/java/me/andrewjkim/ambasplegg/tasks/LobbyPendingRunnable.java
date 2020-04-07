@@ -1,4 +1,4 @@
-package me.andrewjkim.ambasplegg.runnable;
+package me.andrewjkim.ambasplegg.tasks;
 
 
 import me.andrewjkim.ambasplegg.utils.GameManager;
