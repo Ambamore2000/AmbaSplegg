@@ -20,6 +20,6 @@ public class RespawnEvent implements Listener {
 
     @EventHandler
     public void playerRespawnEvent(PlayerRespawnEvent e) {
-        e.getPlayer().teleport(new Location(Bukkit.getWorld("game_world"), 0, 100, 0));
+        //e.getPlayer().teleport(new Location(Bukkit.getWorld("game_world"), 0, 100, 0));
     }
 }

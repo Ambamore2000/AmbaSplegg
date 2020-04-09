@@ -13,6 +13,9 @@ public class InGameRunnable implements Runnable {
 
     @Override
     public void run() {
+
+        //TODO delete
+        gameManager.getPlugin().getServer().shutdown();
         int timer = gameManager.getGameDuration() - gameManager.getSecondsPassed();
         if (timer == 0) {
             gameManager.setInGame();

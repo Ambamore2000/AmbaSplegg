@@ -79,6 +79,9 @@ public class GameManager {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new InGameRunnable(this), 0, 20);
     }
 
+    public AmbaSplegg getPlugin() {
+        return plugin;
+    }
     //TODO Should I make a setCompleteGame function...
 
 

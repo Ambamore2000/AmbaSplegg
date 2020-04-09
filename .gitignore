@@ -30,3 +30,6 @@
 *.ipr
 *.iws
 .idea/
+
+# personal
+/scripts

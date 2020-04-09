@@ -18,6 +18,7 @@ public class LobbyStartingRunnable implements Runnable {
             int timer = 16 - gameManager.getSecondsPassed();
             if (timer == 0) {
                 gameManager.setGameStarting();
+                gameManager.getPlugin().getWorldManager().initializeGameWorld("beyblade");
             } else if (timer == 15 || timer == 10 || timer <= 5) {
                 Bukkit.broadcastMessage("Game starting in " + timer + " seconds.");
             }
