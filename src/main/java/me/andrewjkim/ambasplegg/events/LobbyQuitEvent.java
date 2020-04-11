@@ -17,9 +17,12 @@ public class LobbyQuitEvent implements Listener {
 
     @EventHandler
     public void lobbyQuitEvent(PlayerQuitEvent e) {
-        if (plugin.getGameManager().getGameStatus().toString().contains("LOBBY")) {
+        plugin.getgPlayerManager().removePlayer(e.getPlayer());
+        if (plugin.getGameManager().isInLobby()) {
             if (Bukkit.getOnlinePlayers().size() < plugin.getGameManager().getMinRequired())
                 plugin.getGameManager().setLobbyPending();
+        } else if (plugin.getGameManager().isInGame()) {
+            plugin.getgPlayerManager().checkIfWinnerFound();
         }
     }
 }

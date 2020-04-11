@@ -3,6 +3,7 @@ package me.andrewjkim.ambasplegg.utils;
 import me.andrewjkim.ambasplegg.AmbaSplegg;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.entity.Player;
 
@@ -16,6 +17,12 @@ public class WorldManager {
 
     public WorldManager(AmbaSplegg plugin) {
         this.plugin = plugin;
+    }
+
+    public void deletePlayerData() {
+        for (File playerFile : new File(Bukkit.getWorldContainer().getPath() + "/world/playerdata").listFiles()) {
+            playerFile.delete();
+        }
     }
 
     private void deleteWorld(File target) {

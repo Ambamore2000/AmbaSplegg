@@ -2,11 +2,11 @@ package me.andrewjkim.ambasplegg.utils;
 
 import me.andrewjkim.ambasplegg.AmbaSplegg;
 import me.andrewjkim.ambasplegg.enums.GameStatus;
-import me.andrewjkim.ambasplegg.tasks.GameStartingRunnable;
-import me.andrewjkim.ambasplegg.tasks.InGameRunnable;
-import me.andrewjkim.ambasplegg.tasks.LobbyPendingRunnable;
-import me.andrewjkim.ambasplegg.tasks.LobbyStartingRunnable;
+import me.andrewjkim.ambasplegg.tasks.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class GameManager {
 
@@ -39,6 +39,14 @@ public class GameManager {
 
     private void resetTask(GameStatus inputGameStatus) { if (task != -1) Bukkit.getScheduler().cancelTask(task); secondsPassed = 0; gameStatus = inputGameStatus; }
 
+    public boolean isInLobby() {
+        return (gameStatus.equals(GameStatus.LOBBY_PENDING)
+                || gameStatus.equals(GameStatus.LOBBY_STARTING));
+    }
+    public boolean isInGame() {
+        return (gameStatus.equals(GameStatus.GAME_STARTED)
+                || gameStatus.equals(GameStatus.GAME_STARTING));
+    }
 
     /**
      * Sets game status to lobby pending. (Waiting for enough players to join)
@@ -65,24 +73,43 @@ public class GameManager {
 
     public void setGameStarting() {
         resetTask(GameStatus.GAME_STARTING);
+        getPlugin().getgPlayerManager().initializegPlayerList();
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 100, 20);
     }
 
     /**
-     * Sets game status to in game. (Game has begun)
+     * Sets game status to game started. (Give players items)
      */
 
-    public void setInGame() {
-        resetTask(GameStatus.IN_GAME);
+    public void setGameStarted() {
+        resetTask(GameStatus.GAME_STARTED);
+        fuckShitUp();
 
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new InGameRunnable(this), 0, 20);
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartedRunnable(this), 0, 20);
+    }
+
+    /**
+     * Sets game status to game finished. (Game has finished)
+     */
+
+    public void setGameFinished() {
+        resetTask(GameStatus.GAME_FINISHED);
+        Bukkit.broadcastMessage("WINNER: " + plugin.getgPlayerManager().getWinner().getDisplayName());
+
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameFinishedRunnable(this), 0, 20);
+    }
+
+    //TODO Make a better function to give players items.
+    private void fuckShitUp() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.getInventory().addItem(new ItemStack(Material.IRON_SHOVEL));
+        }
     }
 
     public AmbaSplegg getPlugin() {
         return plugin;
     }
-    //TODO Should I make a setCompleteGame function...
 
 
 }

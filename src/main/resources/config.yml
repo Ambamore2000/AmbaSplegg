@@ -1,5 +1,38 @@
+game:
+  minimum-players: 2 #Amount needed to start the game.
 messages:
-  join: "Ambamore2000 has joined AmbaSplegg."
-  quit: "Ambamore2000 has quit AmbaSplegg."
-  pending: "1 more player needed to start timer."
-  timer: ""
+  prefix: "&8❚&b Splegg &8❚&r "
+  join: "%player% &7has joined AmbaSplegg."
+  quit: "%player% &7has quit AmbaSplegg."
+  waiting:
+    - "&ePlayers waiting: &6%amountWaiting%"
+    - "&ePlayers needed to start: &6%amountNeeded%"
+    - "&eTime till start: &6%timer%"
+  vote: "&e&lVote for a map! &7Use &f/v #."
+  voteoption: "&e&l%#%. &6%map% &7[&f%amountVotes% &7Votes]"
+  voted: "&3Voting has ended! &bThe map &f%mapVoted% &bhas won!" #TODO tie vote
+  start:
+    - "&7&b&m------------------ &b&lSplegg &7&b&m------------------"
+    - ""
+    - "&9Eggs destroy blocks."
+    - "&eRight click your gun to shoot eggs."
+    - "&dCollect Powerups (Enderchests) for special abilities."
+    - "&3Be the last player standing!"
+    - ""
+    - "&7&b&m-------------------------------------------- "
+  restart: "&cGame Over &7» &3&lGoing to hub in 10 seconds."
+  thanks:
+    - "&d&b&m--------------------------------------------"
+    - "%player%! &6Thank you for playing AmbaGames!"
+    - ""
+    - "&d&b&m--------------------------------------------"
+splegg-messages:
+  eliminated: "%player% has been &c&beliminated!"
+  finish:
+    - "&7&b&m---------------- &c&lGame. OVER! &7&b&m----------------"
+    - ""
+    - "%winner% &7has won!"
+    - "%playerMostBlocks% &2destroyed the most blocks! &a(%mostBlocksAmount% blocks)"
+    - "%playerMostEggs% &6shot the most eggs! &e(%mostEggsAmount% eggs)"
+    - ""
+    - "&7&b&m--------------------------------------------"

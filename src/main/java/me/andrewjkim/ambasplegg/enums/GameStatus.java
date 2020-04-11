@@ -5,6 +5,7 @@ public enum GameStatus {
     LOBBY_PENDING,
     LOBBY_STARTING,
     GAME_STARTING,
-    IN_GAME
+    GAME_STARTED,
+    GAME_FINISHED
 
 }
