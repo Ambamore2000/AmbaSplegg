@@ -23,7 +23,7 @@ messages:
   restart: "&cGame Over &7» &3&lGoing to hub in 10 seconds."
   thanks:
     - "&d&b&m--------------------------------------------"
-    - "%player%! &6Thank you for playing AmbaGames!"
+    - "&6Thank you for playing AmbaGames!"
     - ""
     - "&d&b&m--------------------------------------------"
 splegg-messages:
@@ -32,7 +32,7 @@ splegg-messages:
     - "&7&b&m---------------- &c&lGame. OVER! &7&b&m----------------"
     - ""
     - "%winner% &7has won!"
-    - "%playerMostBlocks% &2destroyed the most blocks! &a(%mostBlocksAmount% blocks)"
-    - "%playerMostEggs% &6shot the most eggs! &e(%mostEggsAmount% eggs)"
+    #TODO- "%playerMostBlocks% &2destroyed the most blocks! &a(%mostBlocksAmount% blocks)"
+    #TODO- "%playerMostEggs% &6shot the most eggs! &e(%mostEggsAmount% eggs)"
     - ""
     - "&7&b&m--------------------------------------------"

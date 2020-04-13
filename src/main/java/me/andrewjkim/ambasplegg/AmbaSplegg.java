@@ -10,6 +10,7 @@ import me.andrewjkim.ambasplegg.events.spleggevents.SpleggLaunchHitBlockEvent;
 import me.andrewjkim.ambasplegg.utils.GPlayerManager;
 import me.andrewjkim.ambasplegg.utils.GameManager;
 
+import me.andrewjkim.ambasplegg.utils.MessageManager;
 import me.andrewjkim.ambasplegg.utils.WorldManager;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,11 +18,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class AmbaSplegg extends JavaPlugin {
 
     private GameManager gameManager;
+    private MessageManager messageManager;
     private WorldManager worldManager;
     private GPlayerManager gPlayerManager;
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         registerClasses();
         registerEvents();
     }
@@ -32,6 +35,7 @@ public class AmbaSplegg extends JavaPlugin {
     private void registerClasses() {
         worldManager = new WorldManager(this);
         gameManager = new GameManager(this, 1, 60*10);
+        messageManager = new MessageManager(this);
         gPlayerManager = new GPlayerManager(this);
     }
 
@@ -50,6 +54,7 @@ public class AmbaSplegg extends JavaPlugin {
     }
 
     public GameManager getGameManager() { return gameManager; }
+    public MessageManager getMessageManager() { return messageManager; }
     public WorldManager getWorldManager() { return worldManager; }
     public GPlayerManager getgPlayerManager() { return gPlayerManager; }
 

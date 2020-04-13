@@ -23,6 +23,7 @@ public class GameStartingRunnable implements Runnable {
             //TODO cool countdown 5 4 3 2 1 go!
             Bukkit.broadcastMessage(String.valueOf(timer));
         }
+        gameManager.setTimer(timer);
         gameManager.addSecondPassed();
     }
 

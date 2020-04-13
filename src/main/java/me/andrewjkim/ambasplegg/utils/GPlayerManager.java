@@ -31,6 +31,9 @@ public class GPlayerManager {
         spectator.setGameMode(GameMode.ADVENTURE);
         spectator.setAllowFlight(true);
         spectator.setFlying(true);
+        for (Player others : Bukkit.getServer().getOnlinePlayers()) {
+            others.hidePlayer(plugin, spectator);
+        }
         teleportPlayerToCenter(spectator);
     }
     public void teleportPlayerToCenter(Player player) {

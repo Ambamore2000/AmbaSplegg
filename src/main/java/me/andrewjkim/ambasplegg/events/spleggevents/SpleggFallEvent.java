@@ -20,6 +20,7 @@ public class SpleggFallEvent implements Listener {
             if (e.getTo().getY() <= 0) {
                 if (plugin.getGameManager().isInGame() && plugin.getgPlayerManager().isPlaying(e.getPlayer())) {
                     plugin.getgPlayerManager().setSpectator(e.getPlayer());
+                    plugin.getMessageManager().printEliminatedMessage(e.getPlayer().getDisplayName());
                     plugin.getgPlayerManager().checkIfWinnerFound();
                 } else {
                     plugin.getgPlayerManager().teleportPlayerToCenter(e.getPlayer());

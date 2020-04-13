@@ -14,7 +14,6 @@ public class LobbyStartingRunnable implements Runnable {
     @Override
     public void run() {
         if (Bukkit.getOnlinePlayers().size() >= gameManager.getMinRequired()) {
-            //TODO config timer times? Probably not.
             int timer = 16 - gameManager.getSecondsPassed();
             if (timer == 0) {
                 gameManager.setGameStarting();
@@ -22,6 +21,7 @@ public class LobbyStartingRunnable implements Runnable {
             } else if (timer == 15 || timer == 10 || timer <= 5) {
                 Bukkit.broadcastMessage("Game starting in " + timer + " seconds.");
             }
+            gameManager.setTimer(timer);
         } else {
             gameManager.setLobbyPending();
         }

@@ -17,6 +17,10 @@ public class GameManager {
     private int gameDuration;
 
     private int task;
+    private int voteMessageTask;
+    private int expTimerTask;
+
+    private int timer;
     private int secondsPassed;
 
     public GameManager(AmbaSplegg plugin, int minRequired, int gameDuration) {
@@ -25,23 +29,39 @@ public class GameManager {
         this.gameDuration = gameDuration;
 
         this.task = -1;
+        this.expTimerTask = -1;
+
+        this.timer = 0;
         this.secondsPassed = 0;
 
         setLobbyPending();
     }
 
     public int getMinRequired() { return minRequired; }
+
     public int getSecondsPassed() { return secondsPassed; }
+    public int getTimer() { return timer; }
+
     public int getGameDuration() { return gameDuration; }
     public GameStatus getGameStatus() { return gameStatus; }
 
     public void addSecondPassed() { secondsPassed++; }
 
-    private void resetTask(GameStatus inputGameStatus) { if (task != -1) Bukkit.getScheduler().cancelTask(task); secondsPassed = 0; gameStatus = inputGameStatus; }
+    public void setTimer(int timer) {
+        this.timer = timer;
+    }
 
+    private void resetTask(GameStatus inputGameStatus) { if (task != -1) Bukkit.getScheduler().cancelTask(task); secondsPassed = 0; gameStatus = inputGameStatus; }
+    private void resetExpTask() { if (expTimerTask != -1) Bukkit.getScheduler().cancelTask(expTimerTask); }
+
+    public boolean isWaiting() {
+        return (gameStatus.equals(GameStatus.LOBBY_PENDING));
+    }
+    public boolean isStarting() {
+        return (gameStatus.equals(GameStatus.LOBBY_STARTING));
+    }
     public boolean isInLobby() {
-        return (gameStatus.equals(GameStatus.LOBBY_PENDING)
-                || gameStatus.equals(GameStatus.LOBBY_STARTING));
+        return (isWaiting() || isStarting());
     }
     public boolean isInGame() {
         return (gameStatus.equals(GameStatus.GAME_STARTED)
@@ -53,8 +73,10 @@ public class GameManager {
      */
     public void setLobbyPending() {
         resetTask(GameStatus.LOBBY_PENDING);
+        resetExpTask();
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyPendingRunnable(this), 0, 20);
+        voteMessageTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new VoteMessageRunnable(this), 0, 20);
     }
 
     /**
@@ -65,6 +87,7 @@ public class GameManager {
         resetTask(GameStatus.LOBBY_STARTING);
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyStartingRunnable(this), 0, 20);
+        expTimerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new ExpTimerRunnable(this), 0, 20);
     }
 
     /**
@@ -73,7 +96,9 @@ public class GameManager {
 
     public void setGameStarting() {
         resetTask(GameStatus.GAME_STARTING);
-        getPlugin().getgPlayerManager().initializegPlayerList();
+        Bukkit.getScheduler().cancelTask(voteMessageTask);
+        plugin.getMessageManager().printVotedMessage();
+        plugin.getgPlayerManager().initializegPlayerList();
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 100, 20);
     }
@@ -84,6 +109,7 @@ public class GameManager {
 
     public void setGameStarted() {
         resetTask(GameStatus.GAME_STARTED);
+        plugin.getMessageManager().printStartMessageList();
         fuckShitUp();
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartedRunnable(this), 0, 20);
@@ -95,7 +121,7 @@ public class GameManager {
 
     public void setGameFinished() {
         resetTask(GameStatus.GAME_FINISHED);
-        Bukkit.broadcastMessage("WINNER: " + plugin.getgPlayerManager().getWinner().getDisplayName());
+        plugin.getMessageManager().printFinishMessageList(plugin.getgPlayerManager().getWinner().getDisplayName());
 
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameFinishedRunnable(this), 0, 20);
     }

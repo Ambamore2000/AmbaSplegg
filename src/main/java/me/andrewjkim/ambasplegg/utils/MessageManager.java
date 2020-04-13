@@ -4,7 +4,6 @@ import me.andrewjkim.ambasplegg.AmbaSplegg;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,10 +64,10 @@ public class MessageManager {
     private void printMessage(final String message) { Bukkit.broadcastMessage(prefix + message); }
     private void printMessageList(final List<String> messageList) { for (String string : messageList) { printMessage(string); } }
 
-    final public void printJoinMessage(String playerJoinName) { printMessage(replacePlaceholders(joinMessage, "%player%", playerJoinName)); }
-    final public void printQuitMessage(String playerQuitName) { printMessage(replacePlaceholders(quitMessage, "%player%", playerQuitName)); }
+    public void printJoinMessage(String playerJoinName) { printMessage(replacePlaceholders(joinMessage, "%player%", playerJoinName)); }
+    public void printQuitMessage(String playerQuitName) { printMessage(replacePlaceholders(quitMessage, "%player%", playerQuitName)); }
     
-    final public void printWaitingMessageList(int amountWaiting, int amountNeeded, int timer) {
+    public void printWaitingMessageList(int amountWaiting, int amountNeeded, int timer) {
         Map<String, String> stringsToReplace = new HashMap<>();
         stringsToReplace.put("%amountWaiting%", String.valueOf(amountWaiting));
         stringsToReplace.put("%amountNeeded%", String.valueOf(amountNeeded));
@@ -76,9 +75,9 @@ public class MessageManager {
         printMessageList(replaceListPlaceholders(waitingMessageList, stringsToReplace));
     }
 
-    final public void printVoteMessage() { printMessage(voteMessage); }
-    final public void printVoteOptionsMessageList() {
-        //TODO Make Vote Manager (get vote map)
+    public void printVoteMessage() { printMessage(voteMessage); printVoteOptionsMessageList(); }
+    private void printVoteOptionsMessageList() {
+        //TODO Make Vote Manager (getMapVoteOptions)
         Map<String, Integer> voteOptions = new HashMap<>();
         int voteId = 1;
         for (String map : voteOptions.keySet()) {
@@ -88,13 +87,18 @@ public class MessageManager {
             stringToPrint = replacePlaceholders(stringToPrint, "%#%", String.valueOf(voteOptions.get(map)));
         }
     }
-    final public void printVotedMessage(String mapVoted) { printMessage(replacePlaceholders(votedMessage, "%mapVoted%", mapVoted)); }
 
-    final public void printStartMessageList() { printMessageList(startMessageList); }
-    final public void printRestartMessage() { printMessage(restartMessage); }
-    final public void printThanksMessageList() { printMessageList(thanksMessageList); }
+    public void printVotedMessage() { printMessage(replacePlaceholders(votedMessage, "%mapVoted%", "mapVoted")); } //TODO getMapVoted
 
-    final public void printEliminatedMessage() { printMessage(eliminatedMessage); }
-    final public void printFinishMessageList() { printMessageList(finishMessageList); }
+    public void printStartMessageList() { printMessageList(startMessageList); }
+    public void printRestartMessage() { printMessage(restartMessage); }
+    public void printThanksMessageList() { printMessageList(thanksMessageList); }
+
+    public void printEliminatedMessage(String eliminatedPlayer) { printMessage(replacePlaceholders(eliminatedMessage, "%player%", eliminatedPlayer)); }
+    public void printFinishMessageList(String winner) {
+        Map<String, String> stringsToReplace = new HashMap<>();
+        stringsToReplace.put("%winner%", winner);
+        printMessageList(replaceListPlaceholders(finishMessageList, stringsToReplace));
+    }
 
 }

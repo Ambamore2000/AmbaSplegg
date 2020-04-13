@@ -15,10 +15,12 @@ public class GameFinishedRunnable implements Runnable {
     public void run() {
         int timer = 20 - gameManager.getSecondsPassed();
         if (timer == 0) {
-            //gameManager.getPlugin().getServer().shutdown();
-        } else {
-            Bukkit.broadcastMessage(String.valueOf(timer));
+            gameManager.getPlugin().getMessageManager().printThanksMessageList();
+            gameManager.getPlugin().getServer().shutdown();
+        } else if (timer == 10) {
+            gameManager.getPlugin().getMessageManager().printRestartMessage();
         }
+        gameManager.setTimer(timer);
         gameManager.addSecondPassed();
     }
 }

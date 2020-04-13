@@ -12,17 +12,17 @@ public class LobbyPendingRunnable implements Runnable {
         this.gameManager = gameManager;
     }
 
-    //TODO change 10 and 21 to 30 and 61.
 
     @Override
     public void run() {
         if (Bukkit.getOnlinePlayers().size() >= gameManager.getMinRequired()) {
             gameManager.setLobbyStarting();
         } else {
-            if (gameManager.getSecondsPassed() % 10 == 0) {
-                //TODO Config Message
-                int playerNeededCount = gameManager.getMinRequired() - Bukkit.getOnlinePlayers().size();
-                Bukkit.broadcastMessage("Waiting for " + playerNeededCount + " more players.");
+            //TODO change 11 and 21 to 30 and 61.
+            if (gameManager.getSecondsPassed() == 11) {
+                int amountWaiting = Bukkit.getOnlinePlayers().size();
+                int playerNeededCount = gameManager.getMinRequired() - amountWaiting;
+                gameManager.getPlugin().getMessageManager().printWaitingMessageList(amountWaiting, playerNeededCount, gameManager.getMinRequired());
             }
             if (gameManager.getSecondsPassed() == 21)
                 gameManager.setLobbyPending();

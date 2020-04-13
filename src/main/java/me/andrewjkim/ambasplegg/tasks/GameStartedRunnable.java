@@ -26,6 +26,7 @@ public class GameStartedRunnable implements Runnable {
             if (timer == 300)
                 gameManager.getPlugin().getServer().shutdown();
         }
+        gameManager.setTimer(timer);
         gameManager.addSecondPassed();
     }
 
