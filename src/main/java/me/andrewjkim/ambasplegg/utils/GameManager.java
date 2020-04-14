@@ -10,17 +10,16 @@ import org.bukkit.inventory.ItemStack;
 
 public class GameManager {
 
-    private AmbaSplegg plugin;
+    private final AmbaSplegg plugin;
 
     private GameStatus gameStatus;
-    private int minRequired;
-    private int gameDuration;
+    private final int minRequired;
+    private final int gameDuration;
 
     private int task;
-    private int voteMessageTask;
-    private int expTimerTask;
+    private int expTask;
 
-    private int timer;
+    private int timerCap;
     private int secondsPassed;
 
     public GameManager(AmbaSplegg plugin, int minRequired, int gameDuration) {
@@ -29,9 +28,9 @@ public class GameManager {
         this.gameDuration = gameDuration;
 
         this.task = -1;
-        this.expTimerTask = -1;
+        this.expTask = -1;
 
-        this.timer = 0;
+        this.timerCap = 0;
         this.secondsPassed = 0;
 
         setLobbyPending();
@@ -39,44 +38,48 @@ public class GameManager {
 
     public int getMinRequired() { return minRequired; }
 
-    public int getSecondsPassed() { return secondsPassed; }
-    public int getTimer() { return timer; }
-
-    public int getGameDuration() { return gameDuration; }
-    public GameStatus getGameStatus() { return gameStatus; }
-
+    public int getTimer() { return timerCap - secondsPassed; }
     public void addSecondPassed() { secondsPassed++; }
 
-    public void setTimer(int timer) {
-        this.timer = timer;
+    private void resetTask(GameStatus inputGameStatus, Runnable runnableClass, int inputTimerCap) {
+        if (task != -1) Bukkit.getScheduler().cancelTask(task);
+        if (expTask != -1) Bukkit.getScheduler().cancelTask(expTask);
+        secondsPassed = -1;
+        gameStatus = inputGameStatus;
+        timerCap = inputTimerCap;
+
+        expTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new ExpTimerRunnable(this), 0, 20);
+        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, runnableClass, 0, 20);
     }
 
-    private void resetTask(GameStatus inputGameStatus) { if (task != -1) Bukkit.getScheduler().cancelTask(task); secondsPassed = 0; gameStatus = inputGameStatus; }
-    private void resetExpTask() { if (expTimerTask != -1) Bukkit.getScheduler().cancelTask(expTimerTask); }
+    public boolean isRunnableInitialized() { return getTimer() == timerCap; }
 
-    public boolean isWaiting() {
+    public boolean isLobbyPending() {
         return (gameStatus.equals(GameStatus.LOBBY_PENDING));
     }
-    public boolean isStarting() {
+    public boolean isLobbyStarting() {
         return (gameStatus.equals(GameStatus.LOBBY_STARTING));
     }
     public boolean isInLobby() {
-        return (isWaiting() || isStarting());
+        return (isLobbyPending() || isLobbyStarting());
     }
-    public boolean isInGame() {
-        return (gameStatus.equals(GameStatus.GAME_STARTED)
-                || gameStatus.equals(GameStatus.GAME_STARTING));
+
+    public boolean isGameStarting() {
+        return (gameStatus.equals(GameStatus.GAME_STARTING));
     }
+    public boolean isGameStarted() {
+        return (gameStatus.equals(GameStatus.GAME_STARTED));
+    }
+    public boolean isGameFinished() {
+        return (gameStatus.equals(GameStatus.GAME_FINISHED));
+    }
+    public boolean isInGame() { return (isGameStarting() || isGameStarted() || isGameFinished()); }
 
     /**
      * Sets game status to lobby pending. (Waiting for enough players to join)
      */
     public void setLobbyPending() {
-        resetTask(GameStatus.LOBBY_PENDING);
-        resetExpTask();
-
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyPendingRunnable(this), 0, 20);
-        voteMessageTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new VoteMessageRunnable(this), 0, 20);
+        resetTask(GameStatus.LOBBY_PENDING, new LobbyPendingRunnable(this), 20);
     }
 
     /**
@@ -84,10 +87,7 @@ public class GameManager {
      */
 
     public void setLobbyStarting() {
-        resetTask(GameStatus.LOBBY_STARTING);
-
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new LobbyStartingRunnable(this), 0, 20);
-        expTimerTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new ExpTimerRunnable(this), 0, 20);
+        resetTask(GameStatus.LOBBY_STARTING, new LobbyStartingRunnable(this), 15);
     }
 
     /**
@@ -95,12 +95,7 @@ public class GameManager {
      */
 
     public void setGameStarting() {
-        resetTask(GameStatus.GAME_STARTING);
-        Bukkit.getScheduler().cancelTask(voteMessageTask);
-        plugin.getMessageManager().printVotedMessage();
-        plugin.getgPlayerManager().initializegPlayerList();
-
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartingRunnable(this), 100, 20);
+        resetTask(GameStatus.GAME_STARTING, new GameStartingRunnable(this), 10);
     }
 
     /**
@@ -108,30 +103,14 @@ public class GameManager {
      */
 
     public void setGameStarted() {
-        resetTask(GameStatus.GAME_STARTED);
-        plugin.getMessageManager().printStartMessageList();
-        fuckShitUp();
-
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameStartedRunnable(this), 0, 20);
+        resetTask(GameStatus.GAME_STARTED, new GameStartedRunnable(this), gameDuration);
     }
 
     /**
      * Sets game status to game finished. (Game has finished)
      */
 
-    public void setGameFinished() {
-        resetTask(GameStatus.GAME_FINISHED);
-        plugin.getMessageManager().printFinishMessageList(plugin.getgPlayerManager().getWinner().getDisplayName());
-
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new GameFinishedRunnable(this), 0, 20);
-    }
-
-    //TODO Make a better function to give players items.
-    private void fuckShitUp() {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            p.getInventory().addItem(new ItemStack(Material.IRON_SHOVEL));
-        }
-    }
+    public void setGameFinished() { resetTask(GameStatus.GAME_FINISHED, new GameFinishedRunnable(this), 20); }
 
     public AmbaSplegg getPlugin() {
         return plugin;

@@ -16,14 +16,20 @@ public class GameStartingRunnable implements Runnable {
 
     @Override
     public void run() {
-        int timer = 11 - gameManager.getSecondsPassed();
-        if (timer == 0) {
-            gameManager.setGameStarted();
-        } else {
-            //TODO cool countdown 5 4 3 2 1 go!
+        int timer = gameManager.getTimer();
+
+
+        if (gameManager.isRunnableInitialized()) {
+            gameManager.getPlugin().getMessageManager().printVotedMessage();
+            gameManager.getPlugin().getgPlayerManager().initializegPlayerList();
+        } else if (timer == 5) {
+            //TODO cool countdown 5 4 3 2 1 go! TitleManager
             Bukkit.broadcastMessage(String.valueOf(timer));
+        } else if (timer == 0) {
+            gameManager.setGameStarted();
         }
-        gameManager.setTimer(timer);
+
+
         gameManager.addSecondPassed();
     }
 

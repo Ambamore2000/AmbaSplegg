@@ -14,10 +14,7 @@ public class ExpTimerRunnable implements Runnable {
 
     @Override
     public void run() {
-        if (gameManager.isWaiting())
-            setExpTimer(0);
-        else
-            setExpTimer(gameManager.getTimer());
+        setExpTimer(gameManager.getTimer());
     }
 
     private void setExpTimer(int timer) {

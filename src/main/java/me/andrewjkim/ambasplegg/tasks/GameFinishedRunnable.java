@@ -13,14 +13,20 @@ public class GameFinishedRunnable implements Runnable {
 
     @Override
     public void run() {
-        int timer = 20 - gameManager.getSecondsPassed();
-        if (timer == 0) {
-            gameManager.getPlugin().getMessageManager().printThanksMessageList();
-            gameManager.getPlugin().getServer().shutdown();
+        int timer = gameManager.getTimer();
+
+
+        if (gameManager.isRunnableInitialized()) {
+            if (Bukkit.getOnlinePlayers().size() > 0)
+                gameManager.getPlugin().getMessageManager().printFinishMessageList(gameManager.getPlugin().getgPlayerManager().getWinner().getDisplayName());
         } else if (timer == 10) {
             gameManager.getPlugin().getMessageManager().printRestartMessage();
+        } else if (timer == 0) {
+            gameManager.getPlugin().getMessageManager().printThanksMessageList();
+            gameManager.getPlugin().getServer().shutdown();
         }
-        gameManager.setTimer(timer);
+
+
         gameManager.addSecondPassed();
     }
 }

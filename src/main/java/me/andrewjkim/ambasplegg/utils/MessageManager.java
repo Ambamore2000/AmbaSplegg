@@ -1,8 +1,10 @@
 package me.andrewjkim.ambasplegg.utils;
 
 import me.andrewjkim.ambasplegg.AmbaSplegg;
+import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +64,12 @@ public class MessageManager {
         return messageList;
     }
     private void printMessage(final String message) { Bukkit.broadcastMessage(prefix + message); }
-    private void printMessageList(final List<String> messageList) { for (String string : messageList) { printMessage(string); } }
+    private void printMessage(Player player, final String message) { player.sendMessage(prefix + message); }
+    private void printMessageList(final List<String> messageList) {
+        for (String message : messageList) {
+            Bukkit.broadcastMessage(StringUtils.center(message, 52));
+        }
+    }
 
     public void printJoinMessage(String playerJoinName) { printMessage(replacePlaceholders(joinMessage, "%player%", playerJoinName)); }
     public void printQuitMessage(String playerQuitName) { printMessage(replacePlaceholders(quitMessage, "%player%", playerQuitName)); }
@@ -76,16 +83,19 @@ public class MessageManager {
     }
 
     public void printVoteMessage() { printMessage(voteMessage); printVoteOptionsMessageList(); }
+    public void printVoteMessage(Player player) { printMessage(voteMessage); printVoteOptionsMessageList(player); }
     private void printVoteOptionsMessageList() {
         //TODO Make Vote Manager (getMapVoteOptions)
         Map<String, Integer> voteOptions = new HashMap<>();
         int voteId = 1;
         for (String map : voteOptions.keySet()) {
-            String stringToPrint = voteMessage;
+            String stringToPrint = "MAP OPTIONS";
             stringToPrint = replacePlaceholders(stringToPrint, "%#%", String.valueOf( voteId++));
             stringToPrint = replacePlaceholders(stringToPrint, "%map%", map);
             stringToPrint = replacePlaceholders(stringToPrint, "%#%", String.valueOf(voteOptions.get(map)));
         }
+    }
+    private void printVoteOptionsMessageList(Player player) {
     }
 
     public void printVotedMessage() { printMessage(replacePlaceholders(votedMessage, "%mapVoted%", "mapVoted")); } //TODO getMapVoted

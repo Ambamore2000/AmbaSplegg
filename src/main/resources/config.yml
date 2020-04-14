@@ -12,27 +12,54 @@ messages:
   voteoption: "&e&l%#%. &6%map% &7[&f%amountVotes% &7Votes]"
   voted: "&3Voting has ended! &bThe map &f%mapVoted% &bhas won!" #TODO tie vote
   start:
-    - "&7&b&m------------------ &b&lSplegg &7&b&m------------------"
+    - "&7&m                    &b&l Splegg &7&m                    "
     - ""
     - "&9Eggs destroy blocks."
     - "&eRight click your gun to shoot eggs."
     - "&dCollect Powerups (Enderchests) for special abilities."
     - "&3Be the last player standing!"
     - ""
-    - "&7&b&m-------------------------------------------- "
+    - "&7&m                                                "
   restart: "&cGame Over &7» &3&lGoing to hub in 10 seconds."
   thanks:
-    - "&d&b&m--------------------------------------------"
+    - "&7&m                                                "
     - "&6Thank you for playing AmbaGames!"
     - ""
-    - "&d&b&m--------------------------------------------"
+    - "&7&m                                                "
 splegg-messages:
   eliminated: "%player% has been &c&beliminated!"
   finish:
-    - "&7&b&m---------------- &c&lGame. OVER! &7&b&m----------------"
+    - "&7&m                 &c&l Game. OVER! &7&m                  "
     - ""
     - "%winner% &7has won!"
     #TODO- "%playerMostBlocks% &2destroyed the most blocks! &a(%mostBlocksAmount% blocks)"
     #TODO- "%playerMostEggs% &6shot the most eggs! &e(%mostEggsAmount% eggs)"
     - ""
-    - "&7&b&m--------------------------------------------"
+    - "&7&m                                                "
+maps:
+  beyblade:
+    name: "Beyblade"
+    spawns:
+      1:
+        x: 0
+        y: 100
+        z: 0
+      2:
+        x: 3
+        y: 100
+        z: 3
+  bigtrees:
+    name: "Big Trees"
+    spawns:
+      1:
+        x: 0
+        y: 100
+        z: 0
+  djskeyboard:
+    name: "DJ's Keyboard"
+  dragonblade:
+    name: "Dragon Blade"
+  theblade:
+    name: "The Blade"
+  thespace:
+    name: "The Space"

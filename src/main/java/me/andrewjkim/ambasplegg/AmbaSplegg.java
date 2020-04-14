@@ -3,16 +3,14 @@ package me.andrewjkim.ambasplegg;
 import me.andrewjkim.ambasplegg.events.GameChatEvent;
 import me.andrewjkim.ambasplegg.events.LobbyJoinEvent;
 import me.andrewjkim.ambasplegg.events.LobbyQuitEvent;
-import me.andrewjkim.ambasplegg.events.spleggevents.SpleggEggEvent;
-import me.andrewjkim.ambasplegg.events.spleggevents.SpleggFallEvent;
-import me.andrewjkim.ambasplegg.events.spleggevents.SpleggLaunchEvent;
-import me.andrewjkim.ambasplegg.events.spleggevents.SpleggLaunchHitBlockEvent;
+import me.andrewjkim.ambasplegg.events.spleggevents.*;
 import me.andrewjkim.ambasplegg.utils.GPlayerManager;
 import me.andrewjkim.ambasplegg.utils.GameManager;
 
 import me.andrewjkim.ambasplegg.utils.MessageManager;
 import me.andrewjkim.ambasplegg.utils.WorldManager;
 
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class AmbaSplegg extends JavaPlugin {
@@ -27,6 +25,8 @@ public class AmbaSplegg extends JavaPlugin {
         saveDefaultConfig();
         registerClasses();
         registerEvents();
+
+        worldManager.disableGameRules(Bukkit.getWorld("world"));
     }
 
     @Override
@@ -51,6 +51,7 @@ public class AmbaSplegg extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new SpleggLaunchEvent(), this);
         getServer().getPluginManager().registerEvents(new SpleggLaunchHitBlockEvent(), this);
         getServer().getPluginManager().registerEvents(new SpleggEggEvent(), this);
+        getServer().getPluginManager().registerEvents(new SpleggTntDamageEvent(), this);
     }
 
     public GameManager getGameManager() { return gameManager; }

@@ -16,15 +16,12 @@ public class SpleggFallEvent implements Listener {
     @EventHandler
     public void spleggFallEvent(PlayerMoveEvent e) {
         if (e.getFrom() != e.getTo()) {
-            e.getPlayer().setFallDistance(0);
             if (e.getTo().getY() <= 0) {
                 if (plugin.getGameManager().isInGame() && plugin.getgPlayerManager().isPlaying(e.getPlayer())) {
                     plugin.getgPlayerManager().setSpectator(e.getPlayer());
                     plugin.getMessageManager().printEliminatedMessage(e.getPlayer().getDisplayName());
                     plugin.getgPlayerManager().checkIfWinnerFound();
-                } else {
-                    plugin.getgPlayerManager().teleportPlayerToCenter(e.getPlayer());
-                }
+                } else { plugin.getgPlayerManager().teleportPlayerToCenter(e.getPlayer()); }
             }
         }
     }

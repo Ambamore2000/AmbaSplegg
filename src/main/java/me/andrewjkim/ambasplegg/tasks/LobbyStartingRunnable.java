@@ -13,18 +13,18 @@ public class LobbyStartingRunnable implements Runnable {
 
     @Override
     public void run() {
-        if (Bukkit.getOnlinePlayers().size() >= gameManager.getMinRequired()) {
-            int timer = 16 - gameManager.getSecondsPassed();
-            if (timer == 0) {
-                gameManager.setGameStarting();
-                gameManager.getPlugin().getWorldManager().initializeGameWorld("bigtrees");
-            } else if (timer == 15 || timer == 10 || timer <= 5) {
-                Bukkit.broadcastMessage("Game starting in " + timer + " seconds.");
-            }
-            gameManager.setTimer(timer);
-        } else {
-            gameManager.setLobbyPending();
+        if (Bukkit.getOnlinePlayers().size() < gameManager.getMinRequired()) { gameManager.setLobbyPending(); }
+        int timer = gameManager.getTimer();
+
+
+        if (timer == 15 || timer == 10 || (timer <= 5 && timer > 0)) {
+            Bukkit.broadcastMessage("Game starting in " + timer + " seconds.");
+        } else if (timer == 0) {
+            gameManager.getPlugin().getWorldManager().initializeGameWorld("bigtrees");
+            gameManager.setGameStarting();
         }
+
+
         gameManager.addSecondPassed();
     }
 

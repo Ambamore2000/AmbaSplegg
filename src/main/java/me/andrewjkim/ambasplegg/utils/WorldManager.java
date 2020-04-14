@@ -1,10 +1,7 @@
 package me.andrewjkim.ambasplegg.utils;
 
 import me.andrewjkim.ambasplegg.AmbaSplegg;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.WorldCreator;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.io.*;
@@ -71,6 +68,7 @@ public class WorldManager {
 
     public void initializeGameWorld(String votedMap) {
         String serverPath = Bukkit.getWorldContainer().getPath();
+
         File sourceWorldFile = new File(serverPath + "/maps/" + votedMap);
         File gameWorldFile = new File(serverPath + "/game_world");
 
@@ -82,10 +80,25 @@ public class WorldManager {
         copyWorld(sourceWorldFile, gameWorldFile);
         new WorldCreator("game_world").createWorld();
 
+        World gameWorld = Bukkit.getWorld("game_world");
+        disableGameRules(gameWorld);
+
         //TODO config teleport locations
         ArrayList<Location> locations = new ArrayList<>();
-        locations.add(Bukkit.getWorld("game_world").getSpawnLocation());
+        locations.add(gameWorld.getSpawnLocation());
         teleportPlayers(locations);
+    }
+
+    public void disableGameRules(World world) {
+        world.setTime(6000);
+        world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, Boolean.FALSE);
+        world.setGameRule(GameRule.DO_ENTITY_DROPS, Boolean.FALSE);
+        world.setGameRule(GameRule.DO_MOB_SPAWNING, Boolean.FALSE); //TODO disable??
+        world.setGameRule(GameRule.DO_PATROL_SPAWNING, Boolean.FALSE);
+        world.setGameRule(GameRule.DO_WEATHER_CYCLE, Boolean.FALSE);
+        world.setGameRule(GameRule.DO_TILE_DROPS, Boolean.FALSE);
+        world.setGameRule(GameRule.FALL_DAMAGE, Boolean.FALSE);
+        world.setGameRule(GameRule.NATURAL_REGENERATION, Boolean.FALSE);
     }
 
     private void teleportPlayers(ArrayList<Location> teleportLocations) {

@@ -16,18 +16,30 @@ public class GameStartedRunnable implements Runnable {
 
     @Override
     public void run() {
-        int timer = gameManager.getGameDuration() - gameManager.getSecondsPassed();
-        if (timer == 0) {
-            gameManager.setGameFinished();
-        } else {
-            Bukkit.broadcastMessage(String.valueOf(timer));
-            Bukkit.broadcastMessage("Automatic shutdown @ 300");
+        int timer = gameManager.getTimer();
+
+
+        if (gameManager.isRunnableInitialized()) {
+            gameManager.getPlugin().getMessageManager().printStartMessageList();
+            fuckShitUp();
+        } else if (timer == 500) {
             //TODO delete
-            if (timer == 300)
-                gameManager.getPlugin().getServer().shutdown();
+            Bukkit.broadcastMessage(String.valueOf(timer));
+            Bukkit.broadcastMessage("Automatically finish game @ 500");
+            gameManager.setGameFinished();
+        } else if (timer == 0) {
+            gameManager.setGameFinished();
         }
-        gameManager.setTimer(timer);
+
+
         gameManager.addSecondPassed();
+    }
+
+    //TODO Make a better function to give players items. ItemManager??
+    private void fuckShitUp() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            p.getInventory().addItem(new ItemStack(Material.IRON_SHOVEL));
+        }
     }
 
 }
