@@ -6,20 +6,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class MessageManager {
 
     AmbaSplegg plugin;
 
+    private final String chatMessage;
     private final String prefix;
     private final String joinMessage;
     private final String quitMessage;
     private final List<String> waitingMessageList;
     private final String voteMessage;
+    private final String voteSelectMessage;
     private final String voteOptionMessage;
     private final String votedMessage;
     private final List<String> startMessageList;
@@ -30,18 +29,20 @@ public class MessageManager {
     private final List<String> finishMessageList;
 
     public MessageManager(AmbaSplegg plugin) { this.plugin = plugin;
+        chatMessage = getString("messages.chat");
         prefix = getString("messages.prefix");
         joinMessage = getString("messages.join");
         quitMessage = getString("messages.quit");
         waitingMessageList = getStringList("messages.waiting");
         voteMessage = getString("messages.vote");
+        voteSelectMessage = getString("messages.voteselect");
         voteOptionMessage = getString("messages.voteoption");
         votedMessage = getString("messages.voted");
         startMessageList = getStringList("messages.start");
         restartMessage = getString("messages.restart");
         thanksMessageList = getStringList("messages.thanks");
 
-        eliminatedMessage = getString("splegg-messages.eliminated");//TODO Separate splegg-messages
+        eliminatedMessage = getString("splegg-messages.eliminated"); //TODO Separate splegg messages.
         finishMessageList = getStringList("splegg-messages.finish");
     }
 
@@ -54,15 +55,10 @@ public class MessageManager {
         return stringList;
     }
 
-    private String replacePlaceholders(String message, String toReplace, String toString) { return message.replace(toReplace, toString); }
-    private List<String> replaceListPlaceholders(List<String> messageList, Map<String, String> stringsToReplace) {
-        for (int x = 0; x < messageList.size(); x++) {
-            for (String toReplace : stringsToReplace.keySet()) {
-                messageList.set(x, replacePlaceholders(messageList.get(x), toReplace, stringsToReplace.get(toReplace)));
-            }
-        }
-        return messageList;
+    private String replacePlaceholders(String message, String toReplace, String toString) {
+        return message.replace(toReplace, toString);
     }
+
     private void printMessage(final String message) { Bukkit.broadcastMessage(prefix + message); }
     private void printMessage(Player player, final String message) { player.sendMessage(prefix + message); }
     private void printMessageList(final List<String> messageList) {
@@ -71,34 +67,60 @@ public class MessageManager {
         }
     }
 
+    public String getChatMessageFormat(String message) { return replacePlaceholders(chatMessage, "%message%", message); }
+
     public void printJoinMessage(String playerJoinName) { printMessage(replacePlaceholders(joinMessage, "%player%", playerJoinName)); }
     public void printQuitMessage(String playerQuitName) { printMessage(replacePlaceholders(quitMessage, "%player%", playerQuitName)); }
     
     public void printWaitingMessageList(int amountWaiting, int amountNeeded, int timer) {
-        Map<String, String> stringsToReplace = new HashMap<>();
-        stringsToReplace.put("%amountWaiting%", String.valueOf(amountWaiting));
-        stringsToReplace.put("%amountNeeded%", String.valueOf(amountNeeded));
-        stringsToReplace.put("%timer%", String.valueOf(timer));
-        printMessageList(replaceListPlaceholders(waitingMessageList, stringsToReplace));
+        for (String stringToPrint : waitingMessageList) {
+            stringToPrint = replacePlaceholders(stringToPrint, "%amountWaiting%", String.valueOf(amountWaiting));
+            if (amountNeeded < 0)
+                stringToPrint = replacePlaceholders(stringToPrint, "%amountNeeded%", "0");
+            else
+                stringToPrint = replacePlaceholders(stringToPrint, "%amountNeeded%", String.valueOf(amountNeeded));
+            if (timer == -1)
+                stringToPrint = replacePlaceholders(stringToPrint, "%timer%", "N/a");
+            else
+                stringToPrint = replacePlaceholders(stringToPrint, "%timer%", String.valueOf(timer));
+            printMessage(stringToPrint);
+        }
     }
 
     public void printVoteMessage() { printMessage(voteMessage); printVoteOptionsMessageList(); }
-    public void printVoteMessage(Player player) { printMessage(voteMessage); printVoteOptionsMessageList(player); }
+    public void printVoteSelectMessage(Player player, Map map) {
+        String stringToPrint = voteSelectMessage;
+        stringToPrint = replacePlaceholders(stringToPrint, "%map%", map.getMapName());
+        stringToPrint = replacePlaceholders(stringToPrint, "%amountVotes%", String.valueOf(plugin.getVoteManager().getVoteCollection().get(map).size()));
+        printMessage(player, stringToPrint);
+    }
+    public void printVoteMessage(Player player) { printMessage(player, voteMessage); printVoteOptionsMessageList(player); }
     private void printVoteOptionsMessageList() {
-        //TODO Make Vote Manager (getMapVoteOptions)
-        Map<String, Integer> voteOptions = new HashMap<>();
-        int voteId = 1;
-        for (String map : voteOptions.keySet()) {
-            String stringToPrint = "MAP OPTIONS";
-            stringToPrint = replacePlaceholders(stringToPrint, "%#%", String.valueOf( voteId++));
-            stringToPrint = replacePlaceholders(stringToPrint, "%map%", map);
-            stringToPrint = replacePlaceholders(stringToPrint, "%#%", String.valueOf(voteOptions.get(map)));
+        for (Player player : plugin.getServer().getOnlinePlayers()) {
+            printVoteOptionsMessageList(player);
         }
     }
     private void printVoteOptionsMessageList(Player player) {
+        Map votedMap = plugin.getVoteManager().getVotedMap();
+        int voteId = 1;
+        for (Map map : plugin.getVoteManager().getVoteCollection().keySet()) {
+            String stringToPrint = voteOptionMessage;
+
+            int amountVotes = plugin.getVoteManager().getVoteCollection().get(map).size();
+
+            stringToPrint = replacePlaceholders(stringToPrint, "%#%", String.valueOf(voteId++));
+            stringToPrint = replacePlaceholders(stringToPrint, "%map%", map.getMapName());
+            stringToPrint = replacePlaceholders(stringToPrint, "%amountVotes%", String.valueOf(amountVotes));
+
+            if (map.getMapName().equalsIgnoreCase(votedMap.getMapName()) && amountVotes > 0) {
+                stringToPrint = stringToPrint.replace("§7", "§a");
+            }
+
+            printMessage(player, stringToPrint);
+        }
     }
 
-    public void printVotedMessage() { printMessage(replacePlaceholders(votedMessage, "%mapVoted%", "mapVoted")); } //TODO getMapVoted
+    public void printVotedMessage() { printMessage(replacePlaceholders(votedMessage, "%mapVoted%", plugin.getVoteManager().getVotedMap().getMapName())); }
 
     public void printStartMessageList() { printMessageList(startMessageList); }
     public void printRestartMessage() { printMessage(restartMessage); }
@@ -106,9 +128,10 @@ public class MessageManager {
 
     public void printEliminatedMessage(String eliminatedPlayer) { printMessage(replacePlaceholders(eliminatedMessage, "%player%", eliminatedPlayer)); }
     public void printFinishMessageList(String winner) {
-        Map<String, String> stringsToReplace = new HashMap<>();
-        stringsToReplace.put("%winner%", winner);
-        printMessageList(replaceListPlaceholders(finishMessageList, stringsToReplace));
+        for (String stringToPrint : finishMessageList) {
+            stringToPrint = replacePlaceholders(stringToPrint, "%winner%", winner);
+            printMessage(stringToPrint);
+        }
     }
 
 }

@@ -15,16 +15,15 @@ public class LobbyPendingRunnable implements Runnable {
 
     @Override
     public void run() {
-        if (Bukkit.getOnlinePlayers().size() >= gameManager.getMinRequired()) { gameManager.setLobbyStarting(); }
+        if (gameManager.getPlugin().getServer().getOnlinePlayers().size() >= gameManager.getMinRequired()) { gameManager.setLobbyStarting(); }
         int timer = gameManager.getTimer();
 
-        //TODO Make shit last longer
-        if (gameManager.isRunnableInitialized()) {
-            gameManager.getPlugin().getMessageManager().printVoteMessage();
-        } else if (timer == 10) {
-            int amountWaiting = Bukkit.getOnlinePlayers().size();
+        if (timer % 30 == 0 && timer > 0) {
+            int amountWaiting = gameManager.getPlugin().getServer().getOnlinePlayers().size();
             int playerNeededCount = gameManager.getMinRequired() - amountWaiting;
-            gameManager.getPlugin().getMessageManager().printWaitingMessageList(amountWaiting, playerNeededCount, gameManager.getMinRequired());
+            gameManager.getPlugin().getMessageManager().printWaitingMessageList(amountWaiting, playerNeededCount, -1);
+        } else if (timer % 20 == 0 && timer > 0) {
+            gameManager.getPlugin().getMessageManager().printVoteMessage();
         } else if (timer == 0) {
             gameManager.setLobbyPending();
         }

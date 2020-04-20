@@ -5,3 +5,6 @@ description: A Splegg minigame utilizing AmbaGamesAPI.
 api-version: "1.15"
 authors: [AndrewJKim, personal@andrewjkim.me]
 website: andrewjkim.me/minecraft/ambagames/splegg
+commands:
+  v:
+    description: Vote command.

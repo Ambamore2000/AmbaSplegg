@@ -37,19 +37,18 @@ public class GameManager {
     }
 
     public int getMinRequired() { return minRequired; }
-
     public int getTimer() { return timerCap - secondsPassed; }
-    public void addSecondPassed() { secondsPassed++; }
+    public void addSecondPassed() { secondsPassed = secondsPassed + 1; }
 
     private void resetTask(GameStatus inputGameStatus, Runnable runnableClass, int inputTimerCap) {
-        if (task != -1) Bukkit.getScheduler().cancelTask(task);
-        if (expTask != -1) Bukkit.getScheduler().cancelTask(expTask);
+        if (task != -1) plugin.getServer().getScheduler().cancelTask(task);
+        if (expTask != -1) plugin.getServer().getScheduler().cancelTask(expTask);
         secondsPassed = -1;
         gameStatus = inputGameStatus;
         timerCap = inputTimerCap;
 
-        expTask = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new ExpTimerRunnable(this), 0, 20);
-        task = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, runnableClass, 0, 20);
+        expTask = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, new ExpTimerRunnable(this), 0, 20);
+        task = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, runnableClass, 0, 20);
     }
 
     public boolean isRunnableInitialized() { return getTimer() == timerCap; }
@@ -75,42 +74,22 @@ public class GameManager {
     }
     public boolean isInGame() { return (isGameStarting() || isGameStarted() || isGameFinished()); }
 
-    /**
-     * Sets game status to lobby pending. (Waiting for enough players to join)
-     */
+
     public void setLobbyPending() {
-        resetTask(GameStatus.LOBBY_PENDING, new LobbyPendingRunnable(this), 20);
+        resetTask(GameStatus.LOBBY_PENDING, new LobbyPendingRunnable(this), 60);
     }
-
-    /**
-     * Sets game status to lobby starting. (Enough players to start the game)
-     */
-
     public void setLobbyStarting() {
-        resetTask(GameStatus.LOBBY_STARTING, new LobbyStartingRunnable(this), 15);
+        resetTask(GameStatus.LOBBY_STARTING, new LobbyStartingRunnable(this), 60);
     }
-
-    /**
-     * Sets game status to game starting. (Short countdown for game to start)
-     */
-
     public void setGameStarting() {
         resetTask(GameStatus.GAME_STARTING, new GameStartingRunnable(this), 10);
     }
-
-    /**
-     * Sets game status to game started. (Give players items)
-     */
-
     public void setGameStarted() {
         resetTask(GameStatus.GAME_STARTED, new GameStartedRunnable(this), gameDuration);
     }
-
-    /**
-     * Sets game status to game finished. (Game has finished)
-     */
-
-    public void setGameFinished() { resetTask(GameStatus.GAME_FINISHED, new GameFinishedRunnable(this), 20); }
+    public void setGameFinished() {
+        resetTask(GameStatus.GAME_FINISHED, new GameFinishedRunnable(this), 20);
+    }
 
     public AmbaSplegg getPlugin() {
         return plugin;

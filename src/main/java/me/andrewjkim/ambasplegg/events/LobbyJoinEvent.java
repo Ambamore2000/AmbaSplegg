@@ -2,10 +2,13 @@ package me.andrewjkim.ambasplegg.events;
 
 import me.andrewjkim.ambasplegg.AmbaSplegg;
 import me.andrewjkim.ambasplegg.enums.GameStatus;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+
+import java.util.Objects;
 
 public class LobbyJoinEvent implements Listener {
 
@@ -21,9 +24,8 @@ public class LobbyJoinEvent implements Listener {
         e.getPlayer().setGameMode(GameMode.ADVENTURE);
         e.setJoinMessage(null);
         plugin.getMessageManager().printJoinMessage(e.getPlayer().getDisplayName());
-        if (plugin.getGameManager().isInLobby()) {
-            plugin.getgPlayerManager().teleportPlayerToCenter(e.getPlayer());
-        }
+
+        if (plugin.getGameManager().isInLobby()) { plugin.getgPlayerManager().teleportPlayerToCenter(e.getPlayer(), plugin.getWorldManager().getMainWorldFileName()); }
         else { plugin.getgPlayerManager().setSpectator(e.getPlayer()); }
     }
 

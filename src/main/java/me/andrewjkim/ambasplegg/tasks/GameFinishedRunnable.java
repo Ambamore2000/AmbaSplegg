@@ -17,13 +17,13 @@ public class GameFinishedRunnable implements Runnable {
 
 
         if (gameManager.isRunnableInitialized()) {
-            if (Bukkit.getOnlinePlayers().size() > 0)
+            if (gameManager.getPlugin().getServer().getOnlinePlayers().size() > 0)
                 gameManager.getPlugin().getMessageManager().printFinishMessageList(gameManager.getPlugin().getgPlayerManager().getWinner().getDisplayName());
         } else if (timer == 10) {
             gameManager.getPlugin().getMessageManager().printRestartMessage();
         } else if (timer == 0) {
             gameManager.getPlugin().getMessageManager().printThanksMessageList();
-            gameManager.getPlugin().getServer().shutdown();
+            Bukkit.shutdown();
         }
 
 

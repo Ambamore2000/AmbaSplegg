@@ -18,7 +18,6 @@ public class GameStartedRunnable implements Runnable {
     public void run() {
         int timer = gameManager.getTimer();
 
-
         if (gameManager.isRunnableInitialized()) {
             gameManager.getPlugin().getMessageManager().printStartMessageList();
             fuckShitUp();
@@ -37,7 +36,7 @@ public class GameStartedRunnable implements Runnable {
 
     //TODO Make a better function to give players items. ItemManager??
     private void fuckShitUp() {
-        for (Player p : Bukkit.getOnlinePlayers()) {
+        for (Player p : gameManager.getPlugin().getServer().getOnlinePlayers()) {
             p.getInventory().addItem(new ItemStack(Material.IRON_SHOVEL));
         }
     }

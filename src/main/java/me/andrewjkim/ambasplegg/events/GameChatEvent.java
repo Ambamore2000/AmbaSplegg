@@ -12,7 +12,5 @@ public class GameChatEvent implements Listener {
     public GameChatEvent(AmbaSplegg plugin) { this.plugin = plugin; }
 
     @EventHandler
-    public void gameChatEvent(AsyncPlayerChatEvent e) {
-        e.setMessage("&8» &r" + e.getMessage());
-    }
+    public void gameChatEvent(AsyncPlayerChatEvent e) { e.setMessage(plugin.getMessageManager().getChatMessageFormat(e.getMessage())); }
 }

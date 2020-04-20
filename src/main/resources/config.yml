@@ -1,14 +1,18 @@
 game:
-  minimum-players: 2 #Amount needed to start the game.
+  minimum-players: 1 #Amount needed to start the game.
+  vote-amount: 6 #Amount of maps to load into the game, must be less than the amount in maps.
+  duration: 600 #Amount of seconds for the game to automatically finish.
 messages:
+  chat: "&8» &r%message%"
   prefix: "&8❚&b Splegg &8❚&r "
   join: "%player% &7has joined AmbaSplegg."
   quit: "%player% &7has quit AmbaSplegg."
   waiting:
     - "&ePlayers waiting: &6%amountWaiting%"
     - "&ePlayers needed to start: &6%amountNeeded%"
-    - "&eTime till start: &6%timer%"
+    - "&eTime till start: &6%timer% &eseconds"
   vote: "&e&lVote for a map! &7Use &f/v #."
+  voteselect: "&a&lVote received. &3The map &6%map% &3now has &b%amountVotes% &3votes."
   voteoption: "&e&l%#%. &6%map% &7[&f%amountVotes% &7Votes]"
   voted: "&3Voting has ended! &bThe map &f%mapVoted% &bhas won!" #TODO tie vote
   start:
@@ -41,13 +45,21 @@ maps:
     name: "Beyblade"
     spawns:
       1:
-        x: 0
-        y: 100
-        z: 0
+        x: 12
+        y: 62
+        z: 12
       2:
-        x: 3
-        y: 100
-        z: 3
+        x: -12
+        y: 62
+        z: 12
+      3:
+        x: 12
+        y: 62
+        z: -12
+      4:
+        x: -12
+        y: 62
+        z: -12
   bigtrees:
     name: "Big Trees"
     spawns:

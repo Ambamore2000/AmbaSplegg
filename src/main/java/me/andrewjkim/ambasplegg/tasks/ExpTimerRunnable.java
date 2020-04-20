@@ -14,11 +14,14 @@ public class ExpTimerRunnable implements Runnable {
 
     @Override
     public void run() {
-        setExpTimer(gameManager.getTimer());
+        if (gameManager.isLobbyPending())
+            setExpTimer(0);
+        else
+            setExpTimer(gameManager.getTimer());
     }
 
     private void setExpTimer(int timer) {
-        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+        for (Player p : gameManager.getPlugin().getServer().getOnlinePlayers()) {
             p.setLevel(timer);
         }
     }
